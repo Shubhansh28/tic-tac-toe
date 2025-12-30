@@ -49,11 +49,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: all 100ms ease-in-out;
         }
         .boxtext {
             font-size: 50px;
             font-family: "Knewave", system-ui;
             font-weight: 400;
+            transition: all 500ms ease-out;
         }
         div.score>h1 {
             /* font-size: 25px; */
@@ -89,7 +91,7 @@
 <body>
     <div class="section">
         <div class="container">
-            <div class="box bt-0 bl-0"><span class="boxtext"></span></div>
+            <div class="box bt-0 bl-0"><span class="boxtext "></span></div>
             <div class="box bt-0" ><span class="boxtext"></span></div>
             <div class="box bt-0 br-0"><span class="boxtext"></span></div>
             <div class="box bl-0"><span class="boxtext"></span></div>
@@ -116,6 +118,7 @@
         let turn = "X"
         let CurrentTurn = document.getElementsByClassName("turn")
         let victoryAnimation 
+        let victoryInfo
 
         const changeTurn = () => { return turn === "X" ? "O":"X"}
 
@@ -134,6 +137,8 @@
             for (let i=0; i<win.length; i++) {
                     if ( (boxtext[win[i][0]].innerText!=="") && (boxtext[win[i][0]].innerText===boxtext[win[i][1]].innerText) && (boxtext[win[i][0]].innerText===boxtext[win[i][2]].innerText) ) {
                         victoryAnimation = i
+                        victoryInfo = win[i]
+                        // console.log(victoryAnimation,victoryInfo)
                         return true
                     }
                 }
@@ -150,6 +155,83 @@
             return t
         }
 
+        const finalAnimation = () => {
+            let boxes = document.getElementsByClassName("box")
+            let boxtext = document.getElementsByClassName("boxtext")
+            if (victoryAnimation===0) {
+                boxtext[0].style.translate="100px 100px"
+                boxtext[0].style.transform="scale(3)"
+                boxtext[1].style.translate="0px 100px"
+                boxtext[1].style.transform="scale(3)"
+                boxtext[2].style.translate="-100px 100px"
+                boxtext[2].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===1) {
+                boxtext[3].style.translate="100px"
+                boxtext[3].style.transform="scale(3)"
+                boxtext[4].style.transform="scale(3)"
+                boxtext[5].style.translate="-100px"
+                boxtext[5].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===2) {
+                boxtext[6].style.translate="100px -100px"
+                boxtext[6].style.transform="scale(3)"
+                boxtext[7].style.translate="0px -100px"
+                boxtext[7].style.transform="scale(3)"
+                boxtext[8].style.translate="-100px -100px"
+                boxtext[8].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===3) {
+                boxtext[0].style.translate="100px 100px"
+                boxtext[0].style.transform="scale(3)"
+                boxtext[3].style.translate="100px"
+                boxtext[3].style.transform="scale(3)"
+                boxtext[6].style.translate="100px -100px"
+                boxtext[6].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===4) {
+                boxtext[1].style.translate="0px 100px"
+                boxtext[1].style.transform="scale(3)"
+                boxtext[4].style.transform="scale(3)"
+                boxtext[7].style.translate="0px -100px"
+                boxtext[7].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===5) {
+                boxtext[2].style.translate="-100px 100px"
+                boxtext[2].style.transform="scale(3)"
+                boxtext[5].style.translate="-100px"
+                boxtext[5].style.transform="scale(3)"
+                boxtext[8].style.translate="-100px -100px"
+                boxtext[8].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===6) {
+                boxtext[0].style.translate="100px 100px"
+                boxtext[0].style.transform="scale(3)"
+                boxtext[4].style.transform="scale(3)"
+                boxtext[8].style.translate="-100px -100px"
+                boxtext[8].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===7) {
+                boxtext[2].style.translate="-100px 100px"
+                boxtext[2].style.transform="scale(3)"
+                boxtext[4].style.transform="scale(3)"
+                boxtext[6].style.translate="100px -100px"
+                boxtext[6].style.transform="scale(3)"
+            }
+
+            Array.from(boxes).forEach(e => {e.style.border="0px solid transparent"})
+            for (let i=0; i<boxtext.length; i++) {
+                // console.log(victoryInfo,i,)
+                if (victoryInfo.includes(i)) {
+                    // console.log(victoryInfo,victoryAnimation)
+                    continue
+                }
+                else {
+                    boxtext[i].style.opacity="0"
+                }
+            }
+        }
+        
         let boxes = document.getElementsByClassName("box")
         
         Array.from(boxes).forEach(element => {
@@ -162,6 +244,7 @@
                         CurrentTurn[0].innerText = `${turn} Wins`
                         document.querySelector("div.win-gif > img").style.width="50%"
                         document.querySelector("div.win-gif > img").style.height="50%"
+                        finalAnimation()
                     } 
                     else if (!GameWinner() && !TieChecker()) {
                         turn = changeTurn()
