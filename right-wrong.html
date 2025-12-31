@@ -191,8 +191,56 @@
         resetBtn.addEventListener("click",() => {
             location.reload()
         })
-        playBtn.addEventListener("click",() => {})
+        
+        playBtn.addEventListener("click",() => {
+            turn = "X"
+            CurrentTurn[0].innerText = `Turn For ${turn}`
+            let boxes = document.getElementsByClassName("box")
+            let boxtext = document.getElementsByClassName("boxtext")
+            Array.from(boxes).forEach(btn => {
+                btn.style.border="3px solid #0816155e"
+            })
 
+            boxes[0].style.borderLeft="none"
+            boxes[0].style.borderTop="none"
+            boxes[1].style.borderTop="none"
+            boxes[2].style.borderTop="none"
+            boxes[2].style.borderRight="none"
+            boxes[3].style.borderLeft="none"
+            boxes[5].style.borderRight="none"
+            boxes[6].style.borderLeft="none"
+            boxes[6].style.borderBottom="none"
+            boxes[7].style.borderBottom="none"
+            boxes[8].style.borderRight="none"
+            boxes[8].style.borderBottom="none"
+
+            Array.from(boxtext).forEach(elem => {
+                elem.style.opacity="100"
+                elem.innerText=""
+                elem.style.translate="none"
+                elem.style.transform="none"
+            })
+            document.querySelector("div.win-gif > img").style.width="0"
+            document.querySelector("div.win-gif > img").style.height="0"
+            // victoryAnimation = undefined
+            // victoryInfo = undefined
+        })
+
+        let score = { 
+            x:0, 
+            o:0
+        }
+        const scoreFunction = () => {
+            if (turn==="X") {
+                score.x+=1
+                document.getElementById("scoreX").innerText=score.x
+            }
+            else {
+                score.o+=1
+                document.getElementById("scoreO").innerText=score.o
+            }
+        } 
+        
         const changeTurn = () => { return turn === "X" ? "O":"X"}
 
         const GameWinner = () => {
@@ -318,6 +366,7 @@
                         document.querySelector("div.win-gif > img").style.width="50%"
                         document.querySelector("div.win-gif > img").style.height="50%"
                         finalAnimation()
+                        scoreFunction()
                     } 
                     else if (!GameWinner() && !TieChecker()) {
                         turn = changeTurn()
