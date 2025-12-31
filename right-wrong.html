@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Knewave&family=Rubik+Gemstones&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Dancing+Script:wght@700&family=Knewave&family=Rubik+Gemstones&display=swap');
         * {
             margin: 0;
             padding: 0;
@@ -86,6 +86,59 @@
             height: 0;
             transition: all 900ms ease-out;
         }
+        div.reset {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .reset-game,.play-again {
+            width: 40%;
+            height: 30px;
+            border: none;
+            background-color: rgba(29, 28, 28, 0.819);
+            color: white;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 17px;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+            cursor: grab;
+        }
+        .reset-game:hover,.play-again:hover {
+            background-color: rgba(29, 28, 28, 0.689);
+            box-shadow: 2px 4px 9px rgba(196, 192, 192, 0.881);
+        }
+        div.score-board {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            gap: 10%;
+        }
+        div.xscore,div.yscore {
+            width: 50%;
+            height: 2.8rem;
+            background-color: #0a090782;
+            margin-bottom: 1.5rem;
+            border-radius: 1rem;
+            border: 5px double rgba(14, 155, 153, 0.737);
+            border-top: none;
+            border-right: none;
+            box-shadow: 3px 3px 6.7px rgba(0, 0, 0, 0.35);
+            display: flex;
+            gap: 100px;
+            justify-content: space-around;
+            align-items: center;
+        }
+        div.xscore>span,div.yscore>span {
+            font-size: 30px;
+            font-weight: bold;
+            font-family: "Bungee Spice", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
     </style>
 </head>
 <body>
@@ -102,6 +155,16 @@
             <div class="box bb-0 br-0"><span class="boxtext"></span></div>
         </div>
         <div class="score">
+            <div class="score-board">
+                <div class="xscore">
+                    <span>X</span>
+                    <span id="scoreX">-</span>
+                </div>
+                <div class="yscore">
+                    <span>O</span>
+                    <span id="scoreO">-</span>
+                </div>
+            </div>
             <h1>WELCOME TO TIC TAC TOE</h1>
             <div class="info">
                 <div id="data">
@@ -111,6 +174,10 @@
                     <img src="https://media.tenor.com/dj5QGB1k4ocAAAAi/celebrate-happy.gif" alt="winning-dance">
                 </div>
             </div>
+            <div class="reset">
+                <div class="reset-game">Reset Game</div>
+                <div class="play-again">Play Again</div>
+            </div>
         </div>
     </div>
     <script>
@@ -119,7 +186,61 @@
         let CurrentTurn = document.getElementsByClassName("turn")
         let victoryAnimation 
         let victoryInfo
+        let resetBtn = document.querySelector("div.reset-game")
+        let playBtn = document.querySelector("div.play-again")
+        resetBtn.addEventListener("click",() => {
+            location.reload()
+        })
+        
+        playBtn.addEventListener("click",() => {
+            turn = "X"
+            CurrentTurn[0].innerText = `Turn For ${turn}`
+            let boxes = document.getElementsByClassName("box")
+            let boxtext = document.getElementsByClassName("boxtext")
+            Array.from(boxes).forEach(btn => {
+                btn.style.border="3px solid #0816155e"
+            })
 
+            boxes[0].style.borderLeft="none"
+            boxes[0].style.borderTop="none"
+            boxes[1].style.borderTop="none"
+            boxes[2].style.borderTop="none"
+            boxes[2].style.borderRight="none"
+            boxes[3].style.borderLeft="none"
+            boxes[5].style.borderRight="none"
+            boxes[6].style.borderLeft="none"
+            boxes[6].style.borderBottom="none"
+            boxes[7].style.borderBottom="none"
+            boxes[8].style.borderRight="none"
+            boxes[8].style.borderBottom="none"
+
+            Array.from(boxtext).forEach(elem => {
+                elem.style.opacity="100"
+                elem.innerText=""
+                elem.style.translate="none"
+                elem.style.transform="none"
+            })
+            document.querySelector("div.win-gif > img").style.width="0"
+            document.querySelector("div.win-gif > img").style.height="0"
+            // victoryAnimation = undefined
+            // victoryInfo = undefined
+        })
+
+        let score = { 
+            x:0, 
+            o:0
+        }
+        const scoreFunction = () => {
+            if (turn==="X") {
+                score.x+=1
+                document.getElementById("scoreX").innerText=score.x
+            }
+            else {
+                score.o+=1
+                document.getElementById("scoreO").innerText=score.o
+            }
+        } 
+        
         const changeTurn = () => { return turn === "X" ? "O":"X"}
 
         const GameWinner = () => {
@@ -245,6 +366,7 @@
                         document.querySelector("div.win-gif > img").style.width="50%"
                         document.querySelector("div.win-gif > img").style.height="50%"
                         finalAnimation()
+                        scoreFunction()
                     } 
                     else if (!GameWinner() && !TieChecker()) {
                         turn = changeTurn()
