@@ -215,7 +215,7 @@
             boxes[8].style.borderBottom="none"
 
             Array.from(boxtext).forEach(elem => {
-                elem.style.opacity="100"
+                elem.style.display="inline"
                 elem.innerText=""
                 elem.style.translate="none"
                 elem.style.transform="none"
@@ -348,7 +348,7 @@
                     continue
                 }
                 else {
-                    boxtext[i].style.opacity="0"
+                    boxtext[i].style.display="none"
                 }
             }
         }
