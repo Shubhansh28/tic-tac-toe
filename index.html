@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Dancing+Script:wght@700&family=Knewave&family=Rubik+Gemstones&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        div.section {
+            background-color: cadetblue;
+            height: 600px;
+            width: 70%;
+            margin: 100px auto;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        div.container {
+            height: 300px;
+            width: 300px;
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            grid-auto-rows: 1fr;
+            cursor: grab;
+        }
+        /* .box:hover {
+            background-color: rgba(26, 23, 23, 0.488);
+        } */
+        .box {
+            border: 3px solid #0816155e;
+        }
+        .bt-0 {
+            border-top: 0;
+        }
+        .br-0 {
+            border-right: 0;
+        }
+        .bl-0 {
+            border-left: 0;
+        }
+        .bb-0 {
+            border-bottom: 0;
+        }
+        .box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 300ms ease-in-out;
+        }
+        .boxtext {
+            font-size: 50px;
+            font-family: "Knewave", system-ui;
+            font-weight: 400;
+            transition: all 500ms ease-out;
+        }
+        div.score>h1 {
+            /* font-size: 25px; */
+            font-family: "Rubik Gemstones", system-ui;
+            font-weight: 400;
+            word-spacing: 3px;
+            letter-spacing: 5px;
+        }
+        div.info {
+            text-align: center;
+            line-height: 2.5;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+        }
+        span.turn {
+            font-size: 35px;
+            font-family: "Rubik Gemstones", system-ui;
+            font-weight: 400;
+            word-spacing: 6px;
+            letter-spacing: 1.5px;
+        }
+        div#data {
+            align-self: center;
+        }
+        div.win-gif>img {
+            width: 0;
+            height: 0;
+            transition: all 900ms ease-out;
+        }
+        div.reset {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .reset-game,.play-again {
+            width: 40%;
+            height: 30px;
+            border: none;
+            background-color: rgba(29, 28, 28, 0.819);
+            color: white;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 17px;
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+            cursor: grab;
+        }
+        .reset-game:hover,.play-again:hover {
+            background-color: rgba(29, 28, 28, 0.689);
+            box-shadow: 2px 4px 9px rgba(196, 192, 192, 0.881);
+        }
+        div.score-board {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            gap: 10%;
+        }
+        div.xscore,div.yscore {
+            width: 50%;
+            height: 2.8rem;
+            background-color: #0a090782;
+            margin-bottom: 1.5rem;
+            border-radius: 1rem;
+            border: 5px double rgba(14, 155, 153, 0.737);
+            border-top: none;
+            border-right: none;
+            box-shadow: 3px 3px 6.7px rgba(0, 0, 0, 0.35);
+            display: flex;
+            gap: 100px;
+            justify-content: space-around;
+            align-items: center;
+        }
+        div.xscore>span,div.yscore>span {
+            font-size: 30px;
+            font-weight: bold;
+            font-family: "Bungee Spice", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="container">
+            <div class="box bt-0 bl-0"><span class="boxtext "></span></div>
+            <div class="box bt-0" ><span class="boxtext"></span></div>
+            <div class="box bt-0 br-0"><span class="boxtext"></span></div>
+            <div class="box bl-0"><span class="boxtext"></span></div>
+            <div class="box"><span class="boxtext"></span></div>
+            <div class="box br-0"><span class="boxtext"></span></div>
+            <div class="box bb-0 bl-0"><span class="boxtext"></span></div>
+            <div class="box bb-0"><span class="boxtext"></span></div>
+            <div class="box bb-0 br-0"><span class="boxtext"></span></div>
+        </div>
+        <div class="score">
+            <div class="score-board">
+                <div class="xscore">
+                    <span>X</span>
+                    <span id="scoreX">-</span>
+                </div>
+                <div class="yscore">
+                    <span>O</span>
+                    <span id="scoreO">-</span>
+                </div>
+            </div>
+            <h1>WELCOME TO TIC TAC TOE</h1>
+            <div class="info">
+                <div id="data">
+                    <span class="turn">Turn For X</span>
+                </div>
+                <div class="win-gif">
+                    <img src="https://media.tenor.com/dj5QGB1k4ocAAAAi/celebrate-happy.gif" alt="winning-dance">
+                </div>
+            </div>
+            <div class="reset">
+                <div class="reset-game">Reset Game</div>
+                <div class="play-again">Play Again</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        console.log("hi there")
+        let turn = "X"
+        let CurrentTurn = document.getElementsByClassName("turn")
+        let victoryAnimation 
+        let victoryInfo
+        let resetBtn = document.querySelector("div.reset-game")
+        let playBtn = document.querySelector("div.play-again")
+        resetBtn.addEventListener("click",() => {
+            location.reload()
+        })
+        
+        playBtn.addEventListener("click",() => {
+            turn = "X"
+            CurrentTurn[0].innerText = `Turn For ${turn}`
+            let boxes = document.getElementsByClassName("box")
+            let boxtext = document.getElementsByClassName("boxtext")
+            Array.from(boxes).forEach(btn => {
+                btn.style.border="3px solid #0816155e"
+            })
+
+            boxes[0].style.borderLeft="none"
+            boxes[0].style.borderTop="none"
+            boxes[1].style.borderTop="none"
+            boxes[2].style.borderTop="none"
+            boxes[2].style.borderRight="none"
+            boxes[3].style.borderLeft="none"
+            boxes[5].style.borderRight="none"
+            boxes[6].style.borderLeft="none"
+            boxes[6].style.borderBottom="none"
+            boxes[7].style.borderBottom="none"
+            boxes[8].style.borderRight="none"
+            boxes[8].style.borderBottom="none"
+
+            Array.from(boxtext).forEach(elem => {
+                elem.style.display="inline"
+                elem.innerText=""
+                elem.style.translate="none"
+                elem.style.transform="none"
+            })
+            document.querySelector("div.win-gif > img").style.width="0"
+            document.querySelector("div.win-gif > img").style.height="0"
+            // victoryAnimation = undefined
+            // victoryInfo = undefined
+        })
+
+        let score = { 
+            x:0, 
+            o:0
+        }
+        const scoreFunction = () => {
+            if (turn==="X") {
+                score.x+=1
+                document.getElementById("scoreX").innerText=score.x
+            }
+            else {
+                score.o+=1
+                document.getElementById("scoreO").innerText=score.o
+            }
+        } 
+        
+        const changeTurn = () => { return turn === "X" ? "O":"X"}
+
+        const GameWinner = () => {
+            let boxtext = document.getElementsByClassName("boxtext")
+            let win = [
+                [0,1,2],
+                [3,4,5],
+                [6,7,8],
+                [0,3,6],
+                [1,4,7],
+                [2,5,8],
+                [0,4,8],
+                [2,4,6]
+            ]
+            for (let i=0; i<win.length; i++) {
+                    if ( (boxtext[win[i][0]].innerText!=="") && (boxtext[win[i][0]].innerText===boxtext[win[i][1]].innerText) && (boxtext[win[i][0]].innerText===boxtext[win[i][2]].innerText) ) {
+                        victoryAnimation = i
+                        victoryInfo = win[i]
+                        // console.log(victoryAnimation,victoryInfo)
+                        return true
+                    }
+                }
+            }        
+        
+        const TieChecker = () => {
+            let boxtext = document.getElementsByClassName("boxtext") 
+            let t = true
+            Array.from(boxtext).forEach (elem => {
+                if (elem.innerText==="") {
+                    t = false
+                }
+            })
+            return t
+        }
+
+        const finalAnimation = () => {
+            let boxes = document.getElementsByClassName("box")
+            let boxtext = document.getElementsByClassName("boxtext")
+            if (victoryAnimation===0) {
+                boxtext[0].style.translate="100px 100px"
+                boxtext[0].style.transform="scale(3)"
+                boxtext[1].style.translate="0px 100px"
+                boxtext[1].style.transform="scale(3)"
+                boxtext[2].style.translate="-100px 100px"
+                boxtext[2].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===1) {
+                boxtext[3].style.translate="100px"
+                boxtext[3].style.transform="scale(3)"
+                boxtext[4].style.transform="scale(3)"
+                boxtext[5].style.translate="-100px"
+                boxtext[5].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===2) {
+                boxtext[6].style.translate="100px -100px"
+                boxtext[6].style.transform="scale(3)"
+                boxtext[7].style.translate="0px -100px"
+                boxtext[7].style.transform="scale(3)"
+                boxtext[8].style.translate="-100px -100px"
+                boxtext[8].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===3) {
+                boxtext[0].style.translate="100px 100px"
+                boxtext[0].style.transform="scale(3)"
+                boxtext[3].style.translate="100px"
+                boxtext[3].style.transform="scale(3)"
+                boxtext[6].style.translate="100px -100px"
+                boxtext[6].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===4) {
+                boxtext[1].style.translate="0px 100px"
+                boxtext[1].style.transform="scale(3)"
+                boxtext[4].style.transform="scale(3)"
+                boxtext[7].style.translate="0px -100px"
+                boxtext[7].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===5) {
+                boxtext[2].style.translate="-100px 100px"
+                boxtext[2].style.transform="scale(3)"
+                boxtext[5].style.translate="-100px"
+                boxtext[5].style.transform="scale(3)"
+                boxtext[8].style.translate="-100px -100px"
+                boxtext[8].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===6) {
+                boxtext[0].style.translate="100px 100px"
+                boxtext[0].style.transform="scale(3)"
+                boxtext[4].style.transform="scale(3)"
+                boxtext[8].style.translate="-100px -100px"
+                boxtext[8].style.transform="scale(3)"
+            }
+            else if (victoryAnimation===7) {
+                boxtext[2].style.translate="-100px 100px"
+                boxtext[2].style.transform="scale(3)"
+                boxtext[4].style.transform="scale(3)"
+                boxtext[6].style.translate="100px -100px"
+                boxtext[6].style.transform="scale(3)"
+            }
+
+            Array.from(boxes).forEach(e => {e.style.border="0px solid transparent"})
+            for (let i=0; i<boxtext.length; i++) {
+                // console.log(victoryInfo,i,)
+                if (victoryInfo.includes(i)) {
+                    // console.log(victoryInfo,victoryAnimation)
+                    continue
+                }
+                else {
+                    boxtext[i].style.display="none"
+                }
+            }
+        }
+        
+        let boxes = document.getElementsByClassName("box")
+        
+        Array.from(boxes).forEach(element => {
+            let boxtext = element.querySelector(".boxtext")
+            element.addEventListener("click",() => {
+                if (boxtext.innerText==="") {
+                if (!GameWinner()) {
+                boxtext.innerText = turn }
+                    if (GameWinner()) {
+                        CurrentTurn[0].innerText = `${turn} Wins`
+                        document.querySelector("div.win-gif > img").style.width="50%"
+                        document.querySelector("div.win-gif > img").style.height="50%"
+                        finalAnimation()
+                        scoreFunction()
+                    } 
+                    else if (!GameWinner() && !TieChecker()) {
+                        turn = changeTurn()
+                        CurrentTurn[0].innerText = `Turn For ${turn}`
+                    }
+                    else if (TieChecker()) {
+                        CurrentTurn[0].innerText = `Match Ties`
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+</html>
